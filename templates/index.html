@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .navbar {
+            background: #007bff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: #0056b3;
+        }
+
+        .container {
+            margin: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        form input[type="text"] {
+            display: block;
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background: #007bff;
+            color: #fff;
+        }
+
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        table a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        table a:hover {
+            text-decoration: underline;
+        }
+
+        table form button {
+            background: #dc3545;
+        }
+
+        table form button:hover {
+            background: #c82333;
+        }
+
+        .logout-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background: #dc3545;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background: #c82333;
+        }
+        .image-container {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            max-width: 300px;
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .description {
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div>
+            <a href="{% url 'index' %}">Home</a>
+            <a href="{% url 'shop' %}">Shop</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </div>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
+    </nav>
+
+    <div class="container">
+        <h1>Hi {{request.user}}</h1>
+        
+        <h1>User</h1>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Name">
+            <input type="text" name="surname" placeholder="Surname">
+            <input type="text" name="email" placeholder="Email">
+            <input type="text" name="number" placeholder="Phone number">
+            <button>Submit</button>
+        </form>
+
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Delete</th>
+                <th>Edit</th>
+            </tr>
+            {% for User in list_User %}
+            <tr>
+                <td>{{User.name}}</td>
+                <td>{{User.surname}}</td>
+                <td>{{User.email}}</td>
+                <td>{{User.number}}</td>
+                <td>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{User.id}}">
+                        <button>Delete</button>
+                    </form>
+                </td>
+                <td><a href="{% url 'edit' User.id %}">Edit</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <br>
+
+        <h1>Product</h1>
+
+        <form action="{% url 'product' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Name">
+            <input type="text" name="price" placeholder="Price">
+            <input type="text" name="descrption" placeholder="Description">
+            <button>Submit</button>
+        </form>
+
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Delete</th>
+            </tr>
+            {% for product in list_product %}
+            <tr>
+                <td>{{product.name}}</td>
+                <td>{{product.price}}</td>
+                <td>{{product.descrption}}</td>
+                <td>
+                    <form action="{% url 'product' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{product.id}}">
+                        <button>Delete</button>
+                    </form>
+                </td>
+                <td><a href="{% url 'edit_p' product.id %}">Edit</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+<!-- <div id="image-gallery"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Replace with your API URL
+        const apiUrl = 'https://api.thecatapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1';
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();  // Parsing JSON from the response
+            })
+            .then(images => {
+                const imageGallery = document.getElementById('image-gallery');
+                images.forEach(image => {
+                    const imageDiv = document.createElement('div');
+                    imageDiv.className = 'image-container';
+                    imageDiv.innerHTML = `
+                        <img src="${image.url}" alt="Image ${image.id}">
+                        <div class="description">${image.description}</div>
+                    `;
+                    imageGallery.appendChild(imageDiv);
+                });
+            })
+            .catch(error => console.error('Error fetching images:', error));
+    });
+</script>
+<div id="image-gallery2"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Replace with your API URL
+        const apiUrl = 'https://api.thecatapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1';
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();  // Parsing JSON from the response
+            })
+            .then(images => {
+                const imageGallery = document.getElementById('image-gallery2');
+                images.forEach(image => {
+                    const imageDiv = document.createElement('div');
+                    imageDiv.className = 'image-container';
+                    imageDiv.innerHTML = `
+                        <img src="${image.url}" alt="Image ${image.id}">
+                        <div class="description">${image.description}</div>
+                    `;
+                    imageGallery.appendChild(imageDiv);
+                });
+            })
+            .catch(error => console.error('Error fetching images:', error));
+    });
+</script> -->
+<div id="image-gallery"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    function displayImage(url, description) {
+    const imageGallery = document.getElementById('image-gallery');
+    const imageDiv = document.createElement('div');
+    imageDiv.className = 'image-container';
+    imageDiv.innerHTML = `
+        <img src="${url}" alt="Image">
+        <div class="description">${description}</div>
+    `;
+    imageGallery.appendChild(imageDiv);
+}
+
+
+const images = [
+    { url: 'https://api.thecatapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1', description: ' ' }
+    ];
+
+
+for (let i = 0; i < 3; i++) {
+    const image = images[0];
+    console.log(image.url);
+    displayImage(image.url, image.description);
+}
+
+});
+</script>
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Replace with your API URL
+        const apiUrl = 'https://api.thecatapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1';
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();  // Parsing JSON from the response
+            })
+            .then(images => {
+                const imageGallery = document.getElementById('image-gallery3');
+                images.forEach(image => {
+                    const imageDiv = document.createElement('div');
+                    imageDiv.className = 'image-container';
+                    imageDiv.innerHTML = `
+                        <img src="${image.url}" alt="Image ${image.id}">
+                        <div class="description">${image.description}</div>
+                    `;
+                    imageGallery.appendChild(imageDiv);
+                });
+            })
+            .catch(error => console.error('Error fetching images:', error));
+    });
+</script> -->

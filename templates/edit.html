@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User</title>
+</head>
+<body>
+    <h1>Edit User</h1>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="text" name="name" id="" value="{{edit_user.name}}" placeholder="name">
+        <input type="text" name="surname" id="" value="{{edit_user.surname}}" placeholder="surname">
+        <input type="text" name="email" id="" value="{{edit_user.email}}" placeholder="email">
+        <input type="text" name="number" id="" value="{{edit_user.number}}" placeholder="Phone number">
+
+
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>
